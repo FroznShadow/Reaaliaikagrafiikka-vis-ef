@@ -1,0 +1,28 @@
+#version 330 core
+
+layout (location = 0) in vec3 in_Position;
+layout (location = 1) in vec3 in_Normal;
+layout (location = 2) in vec2 in_TexCoord;
+
+out VS_OUT {
+    vec3 FragPos;
+    vec3 Normal;
+    vec2 TexCoords;
+} vs_out;
+
+uniform mat4 Projection;
+uniform mat4 View;
+uniform mat4 Model;
+uniform vec3 ViewPosition;
+uniform vec3 LigthPosition;
+
+void main()
+{
+    vs_out.FragPos = vec3(Model * vec4(in_Position, 1.0));   
+    vs_out.TexCoords = in_TexCoord;
+        
+    mat3 normalMatrix = transpose(inverse(mat3(Model)));
+    vs_out.Normal = normalize(normalMatrix * in_Normal);
+    
+    gl_Position = Projection * View * Model * vec4(in_Position, 1.0);
+}
